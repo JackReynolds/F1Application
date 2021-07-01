@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap");
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
+
+* { 
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+#heading { 
+    width: 100%;
+    text-align: center;
+    margin: 20px 0 20px 0;
+    font-size: 3rem;
+}
+
+.columns { 
+    display: flex;
+}

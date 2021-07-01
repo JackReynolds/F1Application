@@ -1,0 +1,23 @@
+#heading {
+    width: 100%;
+    text-align: center;
+    margin: 20px 0 20px 0;
+    font-size: 3rem;
+  }
+
+  .navbar {
+    font-size: 20px;
+    height: 70px;
+  }
+  
+  .navbar-item {
+    transition-property: font-size;
+    transition-duration: 1s;
+    transition-delay: 0s;
+  }
+  
+  .navbar-item:hover {
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
