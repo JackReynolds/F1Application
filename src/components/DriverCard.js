@@ -1,19 +1,16 @@
 import React from "react";
-import driverObject from "../modules/driverModule";
 
-const DriverCard = ({ driverData, driverObject }) => {
+const DriverCard = ({ driverData }) => {
   const pointsThisYearStat = parseInt(driverData.pointsThisYear);
   const winsThisYearStat = parseInt(driverData.winsThisYear);
   const totalPointsStat = parseInt(driverData.totalPoints);
   const totalPodiumsStat = parseInt(driverData.totalPodiums);
 
-  console.log(driverData);
-
   return (
     <div className="card">
       <div className="card-image" width="18 rem">
         <figure className="">
-          <img src={driverObject.driverImage} />
+          <img src={driverData.driverImage} />
         </figure>
       </div>
       <div className="card-content">
@@ -38,7 +35,6 @@ const DriverCard = ({ driverData, driverObject }) => {
           className="driverStats driverCompareStats"
           data-value={pointsThisYearStat}
         >
-          {" "}
           Points this Season: {driverData.pointsThisYear}
         </p>
         <hr />
@@ -46,7 +42,6 @@ const DriverCard = ({ driverData, driverObject }) => {
           className="driverStats driverCompareStats"
           data-value={winsThisYearStat}
         >
-          {" "}
           Wins this Season: {driverData.winsThisYear}
         </p>
         <hr />
@@ -54,15 +49,13 @@ const DriverCard = ({ driverData, driverObject }) => {
           className="driverStats driverCompareStats"
           data-value={totalPointsStat}
         >
-          {" "}
-          Total Points Ever: {driverData.totalPoints}{" "}
+          Total Points Ever: {driverData.totalPoints}
         </p>
         <hr />
         <p
           className="driverStats driverCompareStats"
           data-value={totalPodiumsStat}
         >
-          {" "}
           Total Podiums Ever: {driverData.totalPodiums}
         </p>
         <hr />

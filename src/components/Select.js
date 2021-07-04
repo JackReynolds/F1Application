@@ -10,7 +10,9 @@ const Select = ({ getDriverName, position }) => {
   };
 
   useEffect(() => {
-    if (selectedDriver) getDriverName(selectedDriver);
+    if (selectedDriver) {
+      getDriverName(selectedDriver);
+    }
   }, [selectedDriver]);
 
   return (
