@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/driverCard.css";
 
 const DriverCard = ({ driverData }) => {
   const pointsThisYearStat = parseInt(driverData.pointsThisYear);
@@ -8,7 +9,7 @@ const DriverCard = ({ driverData }) => {
 
   return (
     <div className="card">
-      <div className="card-image" width="18 rem">
+      <div className="card-image">
         <figure className="">
           <img src={driverData.driverImage} />
         </figure>

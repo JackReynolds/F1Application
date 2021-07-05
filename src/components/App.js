@@ -5,6 +5,8 @@ import Select from "./Select";
 import "../css/app.css";
 import { Fragment } from "react";
 import DriverCard from "./DriverCard";
+import Standings from "./DriverStandings";
+import Route from "./Route";
 import driverObject from "../modules/driverModule";
 
 const App = () => {
@@ -17,8 +19,6 @@ const App = () => {
     const response = await axios.get(
       `https://ergast.com/api/f1/current/drivers/${driverName}/driverStandings.json`
     );
-
-    console.log(driverName);
 
     const data =
       response.data.MRData.StandingsTable.StandingsLists[
@@ -68,7 +68,7 @@ const App = () => {
   };
 
   const getDriver1Name = (driver) => {
-    // setSelectedDriver1(driver) // this does not seem to set "driver" as the state - not sure why
+    // setSelectedDriver1(driver) // this does not seem to set "driver" as the state - not sure why - need to look into this
     getDriver1Details(driver);
   };
 
@@ -92,33 +92,28 @@ const App = () => {
       ".drivers-right .driverCompareStats"
     );
 
-    console.log(leftSideStats);
-    console.log(rightSideStats);
+    for (let stat of leftSideStats) {
+      stat.classList.remove("is-primary");
+      stat.classList.remove("winning-stat");
+    }
 
-    // for (let stat of leftSideStats) {
-    //   stat.classList.remove("is-primary");
-    //   stat.classList.remove("winning-stat");
-    // }
+    for (let stat of rightSideStats) {
+      stat.classList.remove("is-primary");
+      stat.classList.remove("winning-stat");
+    }
 
-    // for (let stat of rightSideStats) {
-    //   stat.classList.remove("is-primary");
-    //   stat.classList.remove("winning-stat");
-    // }
+    leftSideStats.forEach((leftStat, index) => {
+      const rightStat = rightSideStats[index];
+      const leftSideValue = parseInt(leftStat.dataset.value);
+      const rightSideValue = parseInt(rightStat.dataset.value);
 
-    // leftSideStats.forEach((leftStat, index) => {
-    //   const rightStat = rightSideStats[index];
-    //   const leftSideValue = parseInt(leftStat.dataset.value);
-    //   const rightSideValue = parseInt(rightStat.dataset.value);
-
-    //   if (rightSideValue > leftSideValue) {
-    //     rightStat.classList.add("winning-stat");
-    //     // leftStat.classList.add("is-warning");
-    //   } else if (rightSideValue == leftSideValue) {
-    //   } else {
-    //     leftStat.classList.add("winning-stat");
-    //     //rightStat.classList.add("is-warning");
-    //   }
-    //});
+      if (rightSideValue > leftSideValue) {
+        rightStat.classList.add("winning-stat");
+      } else if (rightSideValue == leftSideValue) {
+      } else {
+        leftStat.classList.add("winning-stat");
+      }
+    });
   };
 
   if (driver1Details && driver2Details) {
@@ -130,30 +125,44 @@ const App = () => {
   return (
     <Fragment>
       <Header />
-      <h3 id="heading">Compare Driver Statistics</h3>
-      <hr></hr>
-      <div className="columns">
-        <div className="column">
-          <h3>Choose your first driver from the selection below</h3>
-          <br />
-          <Select getDriverName={getDriver1Name} position="left" />
-          <br />
-          <br />
-          <div className="drivers-left">
-            {driver1Details ? <DriverCard driverData={driver1Details} /> : null}
+      {/* {showDriverCompare()}
+      {showDriverStandings()} */}
+      <Route path="/">
+        <Fragment>
+          <h3 id="heading">Compare Driver Statistics</h3>
+          <hr />
+          <div className="columns">
+            <div className="column">
+              <h3>Choose your first driver from the selection below</h3>
+              <br />
+              <Select getDriverName={getDriver1Name} position="left" />
+              <br />
+              <br />
+              <div className="drivers-left">
+                {driver1Details ? (
+                  <DriverCard driverData={driver1Details} />
+                ) : null}
+              </div>
+            </div>
+            <div className="column">
+              <h3>Choose your second driver from the selection below</h3>
+              <br />
+              <Select getDriverName={getDriver2Name} position="right" />
+              <br />
+              <br />
+              <div className="drivers-right">
+                {driver2Details ? (
+                  <DriverCard driverData={driver2Details} />
+                ) : null}
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="column">
-          <h3>Choose your second driver from the selection below</h3>
-          <br />
-          <Select getDriverName={getDriver2Name} position="right" />
-          <br />
-          <br />
-          <div className="drivers-right">
-            {driver2Details ? <DriverCard driverData={driver2Details} /> : null}
-          </div>
-        </div>
-      </div>
+        </Fragment>
+      </Route>
+
+      <Route path="standings">
+        <Standings />
+      </Route>
     </Fragment>
   );
 };

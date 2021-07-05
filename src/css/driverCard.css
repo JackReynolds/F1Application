@@ -1,0 +1,22 @@
+.card {
+  max-width: 30vw;
+}
+
+.driverStats {
+  transition-property: font-size;
+  transition-duration: 3s;
+  transition-delay: 0s;
+  text-align: center;
+}
+
+.driverStats.winning-stat {
+  font-size: 24px;
+  color: green;
+}
+
+.drivers-left,
+.drivers-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
