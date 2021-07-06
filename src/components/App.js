@@ -5,9 +5,9 @@ import Select from "./Select";
 import "../css/app.css";
 import { Fragment } from "react";
 import DriverCard from "./DriverCard";
-import Standings from "./DriverStandings";
 import Route from "./Route";
 import driverObject from "../modules/driverModule";
+import Standings from "./Standings";
 
 const App = () => {
   // const [selectedDriver1, setSelectedDriver1] = useState("");
@@ -128,7 +128,7 @@ const App = () => {
       {/* {showDriverCompare()}
       {showDriverStandings()} */}
       <Route path="/">
-        <Fragment>
+        <div>
           <h3 id="heading">Compare Driver Statistics</h3>
           <hr />
           <div className="columns">
@@ -157,10 +157,10 @@ const App = () => {
               </div>
             </div>
           </div>
-        </Fragment>
+        </div>
       </Route>
 
-      <Route path="standings">
+      <Route path="/standings">
         <Standings />
       </Route>
     </Fragment>
