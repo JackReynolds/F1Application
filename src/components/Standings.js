@@ -2,15 +2,13 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import driverObject from "../modules/driverModule";
 import "../css/standings.css";
-const spinner = document.querySelector("#spinner");
 
 const Standings = () => {
-  const [driverListState, setDriverListState] = useState([]);
-  const [driverListArrayState, setDriverListArrayState] = useState([]);
-  const driverTable = useRef("driverTable");
-  const tBody = useRef("tbody");
+  const tBody = useRef();
+  const spinner = useRef();
+  const driverTable = useRef();
   const showSpinner = () => {
-    spinner.classList.add("show");
+    spinner.className = "show";
     setTimeout(() => {
       spinner.className = spinner.className.replace("show", "");
     }, 5000);
@@ -43,8 +41,7 @@ const Standings = () => {
       driverImage: driverObject[driverName].driverImage,
     };
 
-    driverListArray.push(driverData);
-    // setDriverListArray(driverData)
+    return driverData;
   };
 
   const getDriversList = async () => {
@@ -55,7 +52,8 @@ const Standings = () => {
   };
 
   const createDriverStanding = (driver) => {
-    driverTable.classList.remove("none");
+    console.log(driverTable);
+    driverTable.current.className = "driverTable";
     //tds.classList.add("add-padding");
     const tRow = document.createElement("tr");
     const td1 = document.createElement("td");
@@ -68,12 +66,13 @@ const Standings = () => {
     td3.innerText = driver.nationality;
     td4.innerText = driver.drivesFor;
     td5.innerText = driver.pointsThisYear;
-    tBody.appendChild(tRow);
-    tRow.appendChild(td1);
-    tRow.appendChild(td2);
-    tRow.appendChild(td3);
-    tRow.appendChild(td4);
-    tRow.appendChild(td5);
+    // tBody.children = tRow;
+    // tRow.appendChild(td1);
+    // tRow.appendChild(td2);
+    // tRow.appendChild(td3);
+    // tRow.appendChild(td4);
+    // tRow.appendChild(td5);
+    tBody.current.children = tRow;
   };
 
   useEffect(() => {
@@ -83,41 +82,39 @@ const Standings = () => {
         driverList.push(driver.driverId);
         // setDriverList(driver.driverId);
       }
+
+      const getDriverStandingInformation = async (driver) => {
+        const data = await getDriverDetails(driver);
+        driverListArray.push(data);
+      };
+
+      for (let driver of driverList) {
+        getDriverStandingInformation(driver);
+      }
+
+      setTimeout(() => {
+        let driversSortedByPoints = driverListArray.slice(0);
+        driversSortedByPoints.sort((a, b) => {
+          return b.pointsThisYear - a.pointsThisYear;
+        });
+
+        for (let driverSorted of driversSortedByPoints) {
+          createDriverStanding(driverSorted);
+          index++;
+        }
+        console.log(driversSortedByPoints);
+      }, 5000);
+      // setDriverListState(driverList);
     };
     getListofDrivers();
-    console.log("before set");
-    setDriverListState(driverList);
-
-    const getDriverStandingInformation = async (driver) => {
-      const results = await getDriverDetails(driver);
-      driverListArray.push(results);
-    };
-
-    for (let driver of driverListState) {
-      getDriverStandingInformation(driver);
-    }
-
-    setDriverListArrayState(driverListArray);
-
-    console.log(driverListState);
-    console.log(driverListArrayState);
-
-    let driversSortedByPoints = driverListArray.slice(0);
-    driversSortedByPoints.sort((a, b) => {
-      return b.pointsThisYear - a.pointsThisYear;
-    });
-
-    for (let driverSorted of driversSortedByPoints) {
-      createDriverStanding(driverSorted);
-      index++;
-    }
+    // setDriverListArrayState(driverListArray);
   }, []);
 
   return (
     <Fragment>
       <div className="container">
         <h1 id="heading">2021 Driver Standings</h1>
-        <div id="spinner"></div>
+        <div id="spinner" ref={spinner}></div>
         <div className="standings"></div>
       </div>
       <table className="driverTable none" ref={driverTable}>
