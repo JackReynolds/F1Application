@@ -4,18 +4,27 @@ import driverObject from "../modules/driverModule";
 import "../css/standings.css";
 
 const Standings = () => {
-  const tBody = useRef();
+  const elements = [];
   const spinner = useRef();
+  const [finalDriverInfo, setFinalDriverInfo] = useState([]);
   const driverTable = useRef();
   const showSpinner = () => {
-    spinner.className = "show";
+    spinner.current.className = "show";
     setTimeout(() => {
-      spinner.className = spinner.className.replace("show", "");
-    }, 5000);
+      spinner.current.className = "";
+    });
   };
   const driverList = [];
   const driverListArray = [];
   let index = 1;
+
+  const getDriversList = async () => {
+    showSpinner();
+    const driverListRequest = await axios.get(
+      "http://ergast.com/api/f1/current/drivers.json"
+    );
+    return driverListRequest;
+  };
 
   const getDriverDetails = async (driverName) => {
     //showSpinner();
@@ -44,35 +53,17 @@ const Standings = () => {
     return driverData;
   };
 
-  const getDriversList = async () => {
-    const driverListRequest = await axios.get(
-      "http://ergast.com/api/f1/current/drivers.json"
-    );
-    return driverListRequest;
-  };
-
   const createDriverStanding = (driver) => {
-    console.log(driverTable);
     driverTable.current.className = "driverTable";
-    //tds.classList.add("add-padding");
-    const tRow = document.createElement("tr");
-    const td1 = document.createElement("td");
-    const td2 = document.createElement("td");
-    const td3 = document.createElement("td");
-    const td4 = document.createElement("td");
-    const td5 = document.createElement("td");
-    td1.innerText = index;
-    td2.innerText = driver.familyName;
-    td3.innerText = driver.nationality;
-    td4.innerText = driver.drivesFor;
-    td5.innerText = driver.pointsThisYear;
-    // tBody.children = tRow;
-    // tRow.appendChild(td1);
-    // tRow.appendChild(td2);
-    // tRow.appendChild(td3);
-    // tRow.appendChild(td4);
-    // tRow.appendChild(td5);
-    tBody.current.children = tRow;
+    elements.push([
+      <tr>
+        <td>{index}</td>
+        <td>{driver.familyName}</td>
+        <td>{driver.nationality}</td>
+        <td>{driver.drivesFor}</td>
+        <td>{driver.pointsThisYear}</td>
+      </tr>,
+    ]);
   };
 
   useEffect(() => {
@@ -84,8 +75,8 @@ const Standings = () => {
       }
 
       const getDriverStandingInformation = async (driver) => {
-        const data = await getDriverDetails(driver);
-        driverListArray.push(data);
+        const driverData = await getDriverDetails(driver);
+        driverListArray.push(driverData);
       };
 
       for (let driver of driverList) {
@@ -97,17 +88,17 @@ const Standings = () => {
         driversSortedByPoints.sort((a, b) => {
           return b.pointsThisYear - a.pointsThisYear;
         });
+        console.log(driversSortedByPoints);
 
         for (let driverSorted of driversSortedByPoints) {
           createDriverStanding(driverSorted);
           index++;
         }
-        console.log(driversSortedByPoints);
-      }, 5000);
-      // setDriverListState(driverList);
+        setFinalDriverInfo(elements);
+      }, 7000);
     };
     getListofDrivers();
-    // setDriverListArrayState(driverListArray);
+    //setDriverListArrayState(driverListArray);
   }, []);
 
   return (
@@ -127,8 +118,9 @@ const Standings = () => {
             <th>Points</th>
           </tr>
         </thead>
-        <tbody ref={tBody}>
+        <tbody>
           <tr id="driverRow"></tr>
+          {finalDriverInfo}
         </tbody>
       </table>
     </Fragment>
@@ -136,3 +128,6 @@ const Standings = () => {
 };
 
 export default Standings;
+
+// get list of users
+//
