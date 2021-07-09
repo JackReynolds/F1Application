@@ -7,19 +7,22 @@ const Standings = () => {
   const elements = [];
   const spinner = useRef();
   const [finalDriverInfo, setFinalDriverInfo] = useState([]);
+  const [showSpinner, setShowSpinner] = useState(true);
   const driverTable = useRef();
-  const showSpinner = () => {
-    spinner.current.className = "show";
-    setTimeout(() => {
-      spinner.current.className = "";
-    });
-  };
+  // const showSpinnerFunc = () => {
+  //   if (showSpinner) {
+  //     spinner.current.className = "show";
+  //   } else {
+  //     spinner.current.className = "";
+  //     spinner.current.id = "";
+  //   }
+  // };
   const driverList = [];
   const driverListArray = [];
   let index = 1;
 
   const getDriversList = async () => {
-    showSpinner();
+    // showSpinnerFunc();
     const driverListRequest = await axios.get(
       "http://ergast.com/api/f1/current/drivers.json"
     );
@@ -57,7 +60,7 @@ const Standings = () => {
     driverTable.current.className = "driverTable";
     elements.push([
       <tr>
-        <td>{index}</td>
+        <td key={index}>{index}</td>
         <td>{driver.familyName}</td>
         <td>{driver.nationality}</td>
         <td>{driver.drivesFor}</td>
@@ -88,25 +91,27 @@ const Standings = () => {
         driversSortedByPoints.sort((a, b) => {
           return b.pointsThisYear - a.pointsThisYear;
         });
-        console.log(driversSortedByPoints);
-
         for (let driverSorted of driversSortedByPoints) {
           createDriverStanding(driverSorted);
           index++;
         }
+        setShowSpinner(false);
         setFinalDriverInfo(elements);
       }, 7000);
     };
     getListofDrivers();
-    //setDriverListArrayState(driverListArray);
   }, []);
 
   return (
     <Fragment>
       <div className="container">
         <h1 id="heading">2021 Driver Standings</h1>
-        <div id="spinner" ref={spinner}></div>
-        <div className="standings"></div>
+        <div
+          id={showSpinner ? "spinner" : null}
+          className={showSpinner ? "show" : null}
+          ref={spinner}
+        ></div>
+        ;<div className="standings"></div>
       </div>
       <table className="driverTable none" ref={driverTable}>
         <thead>
